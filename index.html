@@ -35,7 +35,15 @@
             position: absolute;bottom: 0;display: block;width: 100%;
         }
 
-        #date-time{
+        .time-message,
+        .rsvp-message{
+            display: none;
+        }
+        .time-message--active,
+        .rsvp-message--active{
+            display: block;
+        }
+        .date-time{
             margin-bottom: 0;
             font-size: 2.5rem;
         }
@@ -58,15 +66,30 @@
             <div class="col s12 center">
                 <h2 id="date-time">June 10<sup>th</sup>, 2017 @ 5pm</h2>
 
-                <p class="grey-text text-darken-3 lighten-3">
-                    Please RSVP by <strong>March 10<sup>th</sup>, 2017</strong> @
-                    <a href="mailto:jkhitched17@gmail.com">                
-                jkhitched17@gmail.com
-            </a>
-                    <div>
-                        (<strong id="days-left"></strong> days left to RSVP!)
-                    </div>
+                <p class="grey-text text-darken-3 lighten-3 rsvp-message">
+                    Please RSVP by <strong>April 10<sup>th</sup>, 2017</strong> to<br>
+                    <a class="waves-effect waves-light btn" href="mailto:jkhitched17@gmail.com?subject=JK Wedding RSVP">                
+                        jkhitched17@gmail.com
+                    </a>                  
                 </p>
+                  <div>
+                        <div class="time-message time-message--rsvp">
+                            (<strong class="days-left"></strong> day<span class="s">s</span> left to RSVP!)
+                        </div>
+                        <div class="time-message time-message--big-day">
+                            <h5><strong class="days-left"></strong> day<span class="s">s</span> left until the big day!</h5>
+                            Please RSVP here if you haven't already<br>
+                            <a class="waves-effect waves-light btn" href="mailto:jkhitched17@gmail.com?subject=JK Wedding RSVP">                
+                                jkhitched17@gmail.com
+                            </a>                               
+                        </div>
+                        <h5 class="green-text lighten-3 time-message time-message--big-day-today">
+                            Today is the big day!!!
+                        </h5>
+                        <h5 class="green-text lighten-3 time-message time-message--after-big-day">
+                            We're married!
+                        </h5>
+                    </div>
             </div>
         </div>
     </div>
@@ -127,7 +150,10 @@
                         <address>
                             <p>11801 Fountains Way, Maple Grove, MN 55369</p>
                         </address>
-                        <br>
+                        <b>
+                            Room block is under "Kaser/Sexton Wedding"
+                        </b>
+                        <br><br>
                         <p class="right-align">
                             <a href="https://maps.google.com?daddr=11801+Fountains+Way,+Maple+Grove,+MN+55369" target="_blank">Get Directions</a>
                         </p>
@@ -161,9 +187,9 @@
         <h4 id="registry" class="header">Gifts/Registry</h4>
 
         <p class="grey-text text-darken-3 lighten-3">
-            Look... this part stinks. You list too much here and you look greedy. You list too little here and you end up with too many things from Bed Bath & Beyond. At this point in our lives we feel <span style="text-decoration: underline">truly blessed</span> to not really <i>need</i> anything! With that said, here are a few things that we hope to purchase in the years to come that we would love you help investing in: 
+            Look... this part stinks. You list too much here and you look greedy. You list too little here and you end up with too many things from Bed Bath & Beyond. At this point in our lives we feel <span style="text-decoration: underline">truly blessed</span> to not really <i>need</i> anything! With that said, here are a few things that we hope to purchase in the years to come that we would love your help investing in: 
             <div class="col s12 m4">
-                <div class="card-panel hoverable center">
+                <div class="card-panel center">
                     <img src="img/honeymoon.jpg" alt="" class="circle responsive-img">
                     <div class="black-text">
                         Honeymoon
@@ -172,7 +198,7 @@
             </div>
 
             <div class="col s12 m4">
-                <div class="card-panel hoverable center">
+                <div class="card-panel center">
                     <img src="img/house.jpg" alt="" class="circle responsive-img">
                     <div class="black-text">
                         New House
@@ -181,7 +207,7 @@
             </div>
 
             <div class="col s12 m4">
-                <div class="card-panel hoverable center">
+                <div class="card-panel center">
                     <img src="img/car.jpg" alt="" class="circle responsive-img">
                     <div class="black-text">
                         New Car
@@ -195,22 +221,36 @@
     <script type="text/javascript" src="materialize/js/materialize.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('.parallax').parallax();
-            $(".button-collapse").sideNav();
+            $('.parallax').parallax();            
 
-            //days until
-            var today = new Date();
-            var BigDay = new Date("June 10, 2017");
-            var msPerDay = 24 * 60 * 60 * 1000;
-            var timeLeft = (BigDay.getTime() - today.getTime());
-            var e_daysLeft = timeLeft / msPerDay;
-            var daysLeft = Math.floor(e_daysLeft);
-            if (daysLeft > 0) {
-                $("#days-left").text(daysLeft)
-            } else {
-                $("#days-left").hide();
-            }
+            function _daysUntil(day){
+                var today = new Date();
+                var BigDay = new Date(day);
+                var msPerDay = 24 * 60 * 60 * 1000;
+                var timeLeft = (BigDay.getTime() - today.getTime());
+                var e_daysLeft = timeLeft / msPerDay;
+                return Math.floor(e_daysLeft) + 1;
+            };            
 
+            var untilRSVP = _daysUntil("April 10, 2017");
+            var untilBigDay = _daysUntil("June 10, 2017");
+            if (untilRSVP > 0) {                
+                $(".days-left").text(untilRSVP);
+                if(untilRSVP == 1){
+                    $(".s").hide();
+                }
+                $(".time-message--rsvp,.rsvp-message").addClass("time-message--active");
+            } else if(untilBigDay > 0){                
+                $(".days-left").text(untilBigDay);
+                if(untilBigDay == 1){
+                    $(".s").hide();
+                }
+                $(".time-message--big-day").addClass("time-message--active");
+            } else if(untilBigDay == 0){                
+                $(".time-message--big-day-today").addClass("time-message--active");
+            }else{
+                $(".time-message--after-big-day").addClass("time-message--active");
+            };
         });
     </script>
 </body>
